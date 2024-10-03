@@ -1,14 +1,14 @@
 function sumSalary(salaries) {
-  const values = Object.values(salaries);
+  let sum = 0;
 
-  const sum = values.reduce((accumulator, currentValue) => {
-    const isNumber = typeof currentValue === "number";
+  for (let key in salaries) {
+    const value = salaries[key];
+    const isNumber = typeof value === "number";
 
-    if (isNumber && isFinite(currentValue)) {
-      return accumulator + currentValue;
+    if (isNumber && isFinite(value)) {
+      sum = sum + value;
     }
-    return accumulator;
-  }, 0);
+  }
 
   return sum;
 }
