@@ -1,8 +1,4 @@
 function isEmpty(obj) {
   const keys = Object.keys(obj);
-  if (keys.length === 0) {
-    return true;
-  }
-
-  return false;
+  return keys.length === 0;
 }
