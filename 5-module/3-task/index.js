@@ -10,7 +10,9 @@ function initCarousel() {
 
   let count = 0;
 
-  hidden(carouselArrowLeft);
+  if (count === 0) {
+    hidden(carouselArrowLeft);
+  }
 
   carousel.addEventListener("click", switchSlide);
 
@@ -21,25 +23,40 @@ function initCarousel() {
     const isCarouselArrowLeft = carouselArrow?.className.includes("left");
 
     if (isCarouselArrowRight) {
-      show(carouselArrowLeft);
+      count = reciveCountRight(count, slidersNumbers);
+      const length = count * width;
+      translateRight(carouselInner, length);
 
-      count = count < slidersNumbers - 1 ? ++count : slidersNumbers - 1;
-      translateRight(carouselInner, count * width);
+      if (count === 1) {
+        show(carouselArrowLeft);
+      }
 
       if (count === slidersNumbers - 1) {
         hidden(carouselArrowRight);
       }
     } else if (isCarouselArrowLeft) {
-      show(carouselArrowRight);
+      count = reciveCountLeft(count);
+      const length = count * width;
 
-      count = count > 0 ? --count : 0;
-      translateLeft(carouselInner, count * width);
+      translateLeft(carouselInner, length);
+
+      if (count === slidersNumbers - 2) {
+        show(carouselArrowRight);
+      }
 
       if (count === 0) {
         hidden(carouselArrowLeft);
       }
     }
   }
+}
+
+function reciveCountRight(count, length) {
+  return count < length - 1 ? ++count : length - 1;
+}
+
+function reciveCountLeft(count) {
+  return count > 0 ? --count : 0;
 }
 
 function show(element) {
