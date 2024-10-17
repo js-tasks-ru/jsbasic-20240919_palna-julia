@@ -5,7 +5,6 @@ function initCarousel() {
   const carouselArrowRight = carousel.querySelector(".carousel__arrow_right");
   const carouselArrowLeft = carousel.querySelector(".carousel__arrow_left");
 
-  const width = carousel.offsetWidth;
   const slidersNumbers = sliders.length;
 
   let count = 0;
@@ -17,6 +16,7 @@ function initCarousel() {
   carousel.addEventListener("click", switchSlide);
 
   function switchSlide(e) {
+    const width = carouselInner.offsetWidth;
     const carouselArrow = e.target.closest(".carousel__arrow");
 
     const isCarouselArrowRight = carouselArrow?.className.includes("right");
@@ -37,7 +37,6 @@ function initCarousel() {
     } else if (isCarouselArrowLeft) {
       count = reciveCountLeft(count);
       const length = count * width;
-
       translateLeft(carouselInner, length);
 
       if (count === slidersNumbers - 2) {
