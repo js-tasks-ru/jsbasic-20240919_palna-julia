@@ -10,43 +10,43 @@ function initCarousel() {
   let count = 0;
 
   if (count === 0) {
-    hidden(carouselArrowLeft);
+    hiddenElement(carouselArrowLeft);
   }
 
   carousel.addEventListener("click", switchSlide);
 
   function switchSlide(e) {
-    const width = carouselInner.offsetWidth;
     const carouselArrow = e.target.closest(".carousel__arrow");
 
     const isCarouselArrowRight = carouselArrow?.className.includes("right");
     const isCarouselArrowLeft = carouselArrow?.className.includes("left");
 
+    const width = carouselInner.offsetWidth;
+
     if (isCarouselArrowRight) {
       count = reciveCountRight(count, slidersNumbers);
-      const length = count * width;
-      translateRight(carouselInner, length);
 
       if (count === 1) {
-        show(carouselArrowLeft);
+        showElement(carouselArrowLeft);
       }
 
       if (count === slidersNumbers - 1) {
-        hidden(carouselArrowRight);
+        hiddenElement(carouselArrowRight);
       }
     } else if (isCarouselArrowLeft) {
       count = reciveCountLeft(count);
-      const length = count * width;
-      translateLeft(carouselInner, length);
 
       if (count === slidersNumbers - 2) {
-        show(carouselArrowRight);
+        showElement(carouselArrowRight);
       }
 
       if (count === 0) {
-        hidden(carouselArrowLeft);
+        hiddenElement(carouselArrowLeft);
       }
     }
+
+    const length = count * width;
+    translateElement(carouselInner, length);
   }
 }
 
@@ -58,18 +58,14 @@ function reciveCountLeft(count) {
   return count > 0 ? --count : 0;
 }
 
-function show(element) {
+function showElement(element) {
   element.style.display = "";
 }
 
-function hidden(element) {
+function hiddenElement(element) {
   element.style.display = "none";
 }
 
-function translateRight(element, length) {
-  element.style.transform = `translateX(-${length}px)`;
-}
-
-function translateLeft(element, length) {
+function translateElement(element, length) {
   element.style.transform = `translateX(-${length}px)`;
 }
