@@ -29,35 +29,44 @@ export default class StepSlider {
     const firstStep = sliderSteps.children[0];
     this.activeStep(firstStep);
 
-    this.elem.addEventListener("click", this.changeStep);
+    this.elem.addEventListener("click", this.onClick);
   }
 
-  changeStep = (e) => {
+  onClick = (e) => {
     const sliderSteps = this.elem.querySelectorAll("span");
 
-    const [valueStep, valueProgress] = this.getValueProgress(e);
+    const [stepProgress, percentProgress] = this.getProgress(e);
 
-    this.changeSliderThumb(valueProgress);
-    this.setSliderValue(valueStep);
+    this.moveAtThumb(percentProgress);
+    this.setSliderValue(stepProgress);
     this.createEventSliderChange();
     this.inactiveStep();
-    this.activeStep(sliderSteps[valueStep + 1]);
+    this.activeStep(sliderSteps[stepProgress + 1]);
   };
 
-  getValueProgress(e) {
-    const clientX = e.clientX;
-    const coordinatesSliderProgress = this.elem.getBoundingClientRect();
-    const coordinateXClick = clientX - coordinatesSliderProgress.x;
+  getProgress = (e) => {
+    const percent = this.getPercent(e);
+    const sizeStep = 100 / (this.steps - 1);
+    const stepProgress = Math.round(percent / sizeStep);
+    const percentProgress = sizeStep * stepProgress;
 
-    const sizeStepPercent = 100 / (this.steps - 1);
-    const percentProgress =
-      (coordinateXClick * 100) / coordinatesSliderProgress.width;
+    return [stepProgress, percentProgress];
+  };
 
-    const valueStep = Math.round(percentProgress / sizeStepPercent);
-    const valueProgress = sizeStepPercent * valueStep;
+  getPercent = (e) => {
+    const coordinateXClick = e.clientX - this.elem.getBoundingClientRect().x;
+    let percent = Math.round(
+      (coordinateXClick * 100) / this.elem.getBoundingClientRect().width
+    );
 
-    return [valueStep, valueProgress];
-  }
+    if (percent > 100) {
+      percent = 100;
+    } else if (percent < 0) {
+      percent = 0;
+    }
+
+    return percent;
+  };
 
   setSliderValue(value) {
     const sliderValue = this.elem.querySelector(".slider__value");
@@ -74,7 +83,7 @@ export default class StepSlider {
     sliderStepActive.classList.remove("slider__step-active");
   }
 
-  changeSliderThumb = (percent) => {
+  moveAtThumb = (percent) => {
     const thumb = this.elem.querySelector(".slider__thumb");
     const progress = this.elem.querySelector(".slider__progress");
 
