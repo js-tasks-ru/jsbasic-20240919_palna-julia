@@ -24,6 +24,7 @@ export default class Cart {
           return card.product[key] === product[key];
         }
       );
+
       return isEqual;
     });
 
