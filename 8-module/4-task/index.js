@@ -168,6 +168,7 @@ export default class Cart {
       const curentProduct = this.cartItems.find((item) => {
         return item.product.id === cartProductId;
       });
+
       if (curentProduct.count === 1) {
         cartProduct.remove();
       }
@@ -183,10 +184,7 @@ export default class Cart {
 
     if (isOpen) {
       cartItem.forEach((item) => {
-        console.log(cartItem);
-
         if (item.count === 0) {
-          console.log(item.count);
           item.remove();
           return;
         }
@@ -232,8 +230,6 @@ export default class Cart {
 
     buttonSubmit.classList.add("is-loading");
     formData = new FormData(e.target, buttonSubmit);
-
-    console.log(formData, buttonSubmit, e.target);
 
     modalSuccess = createElement(`
       <div class="modal__body-inner">
