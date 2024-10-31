@@ -8,7 +8,6 @@ export default class Cart {
 
   constructor(cartIcon) {
     this.cartIcon = cartIcon;
-
     this.addEventListeners();
   }
 
@@ -80,11 +79,9 @@ export default class Cart {
   }
 
   getTotalPrice() {
-    const price = this.cartItems.reduce((accumulator, item) => {
+    return this.cartItems.reduce((accumulator, item) => {
       return (accumulator += item.count * item.product.price);
     }, 0);
-
-    return price;
   }
 
   renderProduct(product, count) {
@@ -140,9 +137,7 @@ export default class Cart {
   renderModal() {
     this.modal = new Modal();
     const orderForm = this.renderOrderForm();
-    const modalBody = createElement(`
-        <div></div>
-      `);
+    const modalBody = createElement(`<div></div>`);
 
     this.cartItems.forEach((item) => {
       const product = this.renderProduct(item.product, item.count);
@@ -165,11 +160,18 @@ export default class Cart {
     if (!button) {
       return;
     }
-
-    const cartProductId = e.target.closest(".cart-product").dataset.productId;
+    const cartProduct = e.target.closest(".cart-product");
+    const cartProductId = cartProduct.dataset.productId;
     const isButtonMinus = button.className.includes("minus");
 
     if (isButtonMinus) {
+      const curentProduct = this.cartItems.find((item) => {
+        return item.product.id === cartProductId;
+      });
+      if (curentProduct.count === 1) {
+        cartProduct.remove();
+      }
+
       this.updateProductCount(cartProductId, -1);
     } else {
       this.updateProductCount(cartProductId, 1);
@@ -181,6 +183,14 @@ export default class Cart {
 
     if (isOpen) {
       cartItem.forEach((item) => {
+        console.log(cartItem);
+
+        if (item.count === 0) {
+          console.log(item.count);
+          item.remove();
+          return;
+        }
+
         const productId = item.product.id;
         const productCount = this.modal.elem.querySelector(
           `[data-product-id="${productId}"] .cart-counter__count`
@@ -221,7 +231,10 @@ export default class Cart {
     }
 
     buttonSubmit.classList.add("is-loading");
-    formData = new FormData(e.target);
+    formData = new FormData(e.target, buttonSubmit);
+
+    console.log(formData, buttonSubmit, e.target);
+
     modalSuccess = createElement(`
       <div class="modal__body-inner">
         <p>
